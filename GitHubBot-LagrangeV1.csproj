@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>GitHubBot_LagrangeV1</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Lagrange.Core\**" />
+    <EmbeddedResource Remove="Lagrange.Core\**" />
+    <None Remove="Lagrange.Core\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Lagrange.Core\Lagrange.Core\Lagrange.Core.csproj" />
+  </ItemGroup>
+
+</Project>
