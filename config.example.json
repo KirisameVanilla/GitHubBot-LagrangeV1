@@ -5,40 +5,35 @@
     "Protocol": "Linux",
     "AutoReconnect": true
   },
-  "GitHub": {
-    "Token": "",
-    "Repositories": [
-      {
-        "Owner": "LagrangeDev",
-        "Name": "Lagrange.Core",
-        "DisplayName": "Lagrange.Core",
-        "WatchEvents": [
-          "commits",
-          "issues",
-          "releases"
-        ],
-        "TargetGroups": [
-          123456789
-        ],
-        "TargetFriends": []
-      }
-    ]
-  },
   "Message": {
     "Enabled": true,
-    "Templates": {
-      "NewCommit": "🚀 [{repo}] 新提交\n👤 作者: {author}\n📝 消息: {message}\n🔗 链接: {url}",
-      "NewIssue": "🐛 [{repo}] 新Issue\n👤 创建者: {author}\n📋 标题: {title}\n🔗 链接: {url}",
-      "NewRelease": "🎉 [{repo}] 新版本发布\n🏷️ 版本: {version}\n📋 标题: {title}\n🔗 链接: {url}",
-      "IssueUpdate": "📝 [{repo}] Issue更新\n👤 更新者: {author}\n📋 标题: {title}\n🔄 状态: {state}\n🔗 链接: {url}"
-    },
     "SendInterval": 1000
   },
-  "Monitor": {
-    "Interval": 300,
-    "SendStartupMessage": true,
-    "StartupMessage": "GitHub监听Bot已启动！",
-    "MaxItemsPerCheck": 5,
-    "VerboseLogging": false
+  "Forward": {
+    "Enabled": true,
+    "Rules": [
+      {
+        "Name": "注释消息转发",
+        "Enabled": true,
+        "SourceGroups": [123456789],
+        "TargetGroups": [987654321],
+        "MessagePrefixes": ["注："],
+        "Keywords": [],
+        "ForwardFullMessage": true,
+        "PreserveFormat": true,
+        "ForwardPrefix": "[转发来自群 {sourceGroup}] "
+      },
+      {
+        "Name": "关键词消息转发",
+        "Enabled": true,
+        "SourceGroups": [123456789],
+        "TargetGroups": [987654321],
+        "MessagePrefixes": [],
+        "Keywords": ["重要", "紧急", "通知"],
+        "ForwardFullMessage": true,
+        "PreserveFormat": true,
+        "ForwardPrefix": "[关键词转发来自群 {sourceGroup}] "
+      }
+    ]
   }
 }

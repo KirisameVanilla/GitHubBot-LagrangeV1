@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99 d17.13
+VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubBot-LagrangeV1", "GitHubBot-LagrangeV1.csproj", "{46BBD200-B94B-403E-83E7-823FE31FC96D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForwardBot-LagrangeV1", "ForwardBot-LagrangeV1.csproj", "{46BBD200-B94B-403E-83E7-823FE31FC96D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lagrange.Core", "Lagrange.Core\Lagrange.Core\Lagrange.Core.csproj", "{B0A97088-6161-E3C1-0D46-8C1C5E7AA5E7}"
 EndProject

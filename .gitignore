@@ -1,3 +1,7 @@
 .vs/
 bin/
 obj/
+config.json
+device.json
+keystore.json
+qrcode.png

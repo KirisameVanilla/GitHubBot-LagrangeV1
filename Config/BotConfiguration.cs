@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace GitHubBot_LagrangeV1.Config;
+namespace ForwardBot_LagrangeV1.Config;
 
 public class BotConfiguration
 {
@@ -10,19 +10,14 @@ public class BotConfiguration
     public BotAccountConfig Account { get; set; } = new();
 
     /// <summary>
-    /// GitHub相关配置
-    /// </summary>
-    public GitHubConfig GitHub { get; set; } = new();
-
-    /// <summary>
     /// 消息发送配置
     /// </summary>
     public MessageConfig Message { get; set; } = new();
 
     /// <summary>
-    /// 监听配置
+    /// 消息转发配置
     /// </summary>
-    public MonitorConfig Monitor { get; set; } = new();
+    public ForwardConfig Forward { get; set; } = new();
 
     /// <summary>
     /// 从JSON文件加载配置
@@ -101,57 +96,6 @@ public class BotAccountConfig
     public bool AutoReconnect { get; set; } = true;
 }
 
-/// <summary>
-/// GitHub配置
-/// </summary>
-public class GitHubConfig
-{
-    /// <summary>
-    /// GitHub API Token（可选，用于提高API调用限制）
-    /// </summary>
-    public string Token { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 要监听的仓库列表
-    /// </summary>
-    public List<GitHubRepository> Repositories { get; set; } = new();
-}
-
-/// <summary>
-/// GitHub仓库配置
-/// </summary>
-public class GitHubRepository
-{
-    /// <summary>
-    /// 仓库所有者
-    /// </summary>
-    public string Owner { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 仓库名称
-    /// </summary>
-    public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 显示名称（用于消息中显示）
-    /// </summary>
-    public string DisplayName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 监听的事件类型
-    /// </summary>
-    public List<string> WatchEvents { get; set; } = new() { "commits", "issues", "releases" };
-
-    /// <summary>
-    /// 要发送消息的群号列表
-    /// </summary>
-    public List<uint> TargetGroups { get; set; } = new();
-
-    /// <summary>
-    /// 要发送消息的好友QQ号列表
-    /// </summary>
-    public List<uint> TargetFriends { get; set; } = new();
-}
 
 /// <summary>
 /// 消息配置
@@ -164,69 +108,74 @@ public class MessageConfig
     public bool Enabled { get; set; } = true;
 
     /// <summary>
-    /// 消息模板配置
-    /// </summary>
-    public MessageTemplates Templates { get; set; } = new();
-
-    /// <summary>
     /// 消息发送间隔（毫秒）
     /// </summary>
     public int SendInterval { get; set; } = 1000;
 }
 
 /// <summary>
-/// 消息模板
+/// 消息转发配置
 /// </summary>
-public class MessageTemplates
+public class ForwardConfig
 {
     /// <summary>
-    /// 新提交消息模板
+    /// 是否启用消息转发功能
     /// </summary>
-    public string NewCommit { get; set; } = "🚀 [{repo}] 新提交\n👤 作者: {author}\n📝 消息: {message}\n🔗 链接: {url}";
+    public bool Enabled { get; set; } = true;
 
     /// <summary>
-    /// 新Issue消息模板
+    /// 转发规则列表
     /// </summary>
-    public string NewIssue { get; set; } = "🐛 [{repo}] 新Issue\n👤 创建者: {author}\n📋 标题: {title}\n🔗 链接: {url}";
-
-    /// <summary>
-    /// 新Release消息模板
-    /// </summary>
-    public string NewRelease { get; set; } = "🎉 [{repo}] 新版本发布\n🏷️ 版本: {version}\n📋 标题: {title}\n🔗 链接: {url}";
-
-    /// <summary>
-    /// Issue状态更新消息模板
-    /// </summary>
-    public string IssueUpdate { get; set; } = "📝 [{repo}] Issue更新\n👤 更新者: {author}\n📋 标题: {title}\n🔄 状态: {state}\n🔗 链接: {url}";
+    public List<ForwardRule> Rules { get; set; } = new();
 }
 
 /// <summary>
-/// 监听配置
+/// 转发规则
 /// </summary>
-public class MonitorConfig
+public class ForwardRule
 {
     /// <summary>
-    /// 监听间隔（秒）
+    /// 规则名称
     /// </summary>
-    public int Interval { get; set; } = 60; // 1分钟
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// 是否在启动时发送测试消息
+    /// 是否启用此规则
     /// </summary>
-    public bool SendStartupMessage { get; set; } = true;
+    public bool Enabled { get; set; } = true;
 
     /// <summary>
-    /// 启动消息内容
+    /// 源群号列表（监听这些群的消息）
     /// </summary>
-    public string StartupMessage { get; set; } = "GitHub监听Bot已启动！";
+    public List<uint> SourceGroups { get; set; } = new();
 
     /// <summary>
-    /// 每次检查获取的最大条目数
+    /// 目标群号列表（转发到这些群）
     /// </summary>
-    public int MaxItemsPerCheck { get; set; } = 5;
+    public List<uint> TargetGroups { get; set; } = new();
 
     /// <summary>
-    /// 是否启用详细日志
+    /// 消息前缀过滤（以此开头的消息会被转发）
     /// </summary>
-    public bool VerboseLogging { get; set; } = false;
+    public List<string> MessagePrefixes { get; set; } = new();
+
+    /// <summary>
+    /// 关键词过滤（包含这些关键词的消息会被转发）
+    /// </summary>
+    public List<string> Keywords { get; set; } = new();
+
+    /// <summary>
+    /// 是否转发整条消息（包含关键词时）
+    /// </summary>
+    public bool ForwardFullMessage { get; set; } = true;
+
+    /// <summary>
+    /// 转发消息时是否保留原格式
+    /// </summary>
+    public bool PreserveFormat { get; set; } = true;
+
+    /// <summary>
+    /// 转发消息前缀模板
+    /// </summary>
+    public string ForwardPrefix { get; set; } = "[转发来自群 {sourceGroup}] ";
 }
