@@ -15,6 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="config.json" />
+    <None Remove="device.json" />
+    <None Remove="keystore.json" />
+    <None Remove="qrcode.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="Lagrange.Core\Lagrange.Core\Lagrange.Core.csproj" />
   </ItemGroup>
 
