@@ -167,6 +167,13 @@ class Program
         var groupUin = groupMessageEvent.Chain.GroupUin!.Value;
         var memberUin = groupMessageEvent.Chain.FriendUin;
 
+        // 防止自循环递归
+        if (memberUin == _bot?.BotUin)
+        {
+            Console.WriteLine("发出了一条信息");
+            return;
+        }
+
         Console.WriteLine($"[群消息] {groupUin}({memberUin}): {message}");
 
         // 处理消息转发

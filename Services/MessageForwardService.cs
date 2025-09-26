@@ -188,14 +188,14 @@ namespace ForwardBot_LagrangeV1.Services
             if (!_config.Rules.Any())
                 return "❌ 没有配置转发规则";
 
-            var details = "📋 转发规则详情:\n\n";
+            var details = "📋 转发规则详情:";
             
             for (int i = 0; i < _config.Rules.Count; i++)
             {
                 var rule = _config.Rules[i];
                 var status = rule.Enabled ? "✅" : "❌";
                 
-                details += $"{i + 1}. {status} {rule.Name}\n";
+                details += $"\n\n{i + 1}. {status} {rule.Name}\n";
                 details += $"   监听群: {string.Join(", ", rule.SourceGroups)}\n";
                 details += $"   目标群: {string.Join(", ", rule.TargetGroups)}\n";
                 
@@ -206,7 +206,7 @@ namespace ForwardBot_LagrangeV1.Services
                     details += $"   关键词过滤: {string.Join(", ", rule.Keywords)}\n";
                 
                 details += $"   转发完整消息: {(rule.ForwardFullMessage ? "是" : "否")}\n";
-                details += $"   保持原格式: {(rule.PreserveFormat ? "是" : "否")}\n\n";
+                details += $"   保持原格式: {(rule.PreserveFormat ? "是" : "否")}";
             }
 
             return details;
