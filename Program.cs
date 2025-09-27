@@ -43,7 +43,8 @@ class Program
             }
 
             Console.WriteLine("✅ Bot初始化完成！");
-            Console.WriteLine("按 'q' 退出，按任意其他键查看状态\n");
+            Console.WriteLine("🚀 Bot已启动并准备监听消息！");
+            Console.WriteLine("📝 消息转发服务已启用\n");
 
             // 保持程序运行
             await KeepAlive();
@@ -215,22 +216,72 @@ class Program
 
     static async Task KeepAlive()
     {
-        while (true)
+        Console.WriteLine("程序正在运行中...");
+        Console.WriteLine("提示：您可以随时按 'q' + Enter 退出程序\n");
+        
+        // 使用 CancellationToken 来优雅地处理程序退出
+        using var cts = new CancellationTokenSource();
+        
+        // 在后台监听键盘输入
+        var keyboardTask = Task.Run(async () =>
         {
-            var key = Console.ReadKey(true);
-            if (key.KeyChar == 'q' || key.KeyChar == 'Q')
+            while (!cts.Token.IsCancellationRequested)
             {
-                Console.WriteLine("\n正在退出...");
-                break;
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(true);
+                    if (key.KeyChar == 'q' || key.KeyChar == 'Q')
+                    {
+                        Console.WriteLine("\n正在退出...");
+                        cts.Cancel();
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n📊 状态信息 - {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                        Console.WriteLine($"Bot状态: {(_bot != null ? "在线" : "离线")}");
+                        if (_bot != null)
+                        {
+                            Console.WriteLine($"Bot名称: {_bot.BotName}");
+                            Console.WriteLine($"Bot QQ号: {_bot.BotUin}");
+                        }
+                        Console.WriteLine("按 'q' 退出，按任意键查看状态\n");
+                    }
+                }
+                
+                await Task.Delay(100, cts.Token).ConfigureAwait(false);
             }
-            else
+        }, cts.Token);
+        
+        // 主循环 - 不阻塞，定期检查状态
+        try
+        {
+            while (!cts.Token.IsCancellationRequested)
             {
-                Console.WriteLine($"\n📊 状态信息 - {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-                Console.WriteLine($"Bot状态: {(_bot != null ? "在线" : "离线")}");
-                Console.WriteLine("按 'q' 退出，按任意键查看状态\n");
+                // 每30秒显示一次心跳信息（可选）
+                await Task.Delay(30000, cts.Token);
+                
+                // 可以在这里添加定期的状态检查逻辑
+                // 比如检查Bot连接状态、自动重连等
+                if (_bot != null && _config?.Account.AutoReconnect == true)
+                {
+                    // 这里可以添加连接状态检查逻辑
+                }
             }
-
-            await Task.Delay(100);
+        }
+        catch (OperationCanceledException)
+        {
+            // 正常取消，不需要处理
+        }
+        
+        // 等待键盘监听任务完成
+        try
+        {
+            await keyboardTask;
+        }
+        catch (OperationCanceledException)
+        {
+            // 正常取消，不需要处理
         }
     }
 
